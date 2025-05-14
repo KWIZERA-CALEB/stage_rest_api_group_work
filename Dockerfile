@@ -1,17 +1,13 @@
-# Use the official Bun image as the base
-FROM oven/bun:1 AS base
+FROM node:20.9.0-slim
+
 WORKDIR /usr/src/app
 
-# Install dependencies
-COPY package.json bun.lockb ./
-RUN bun install --production
+COPY package*.json ./
 
-# Copy the rest of the application code
+RUN npm ci --omit=dev
+
 COPY . .
 
-# Run as non-root user for security
-USER bun
 EXPOSE 3000
 
-# Start the app
-ENTRYPOINT ["bun", "run", "server.js"]
+CMD ["npm", "start"]
